@@ -1,0 +1,29 @@
+def getWatsonConverstationApiResponse(message,context=''):
+
+    conversation = ConversationV1(
+        username=watsonUsername,
+        password=watsonPassword,
+        version=watsonVersion
+    )
+
+    message_body = {
+
+                "text": message,
+
+
+
+        }
+
+    print(json.dumps(message_body, indent=2))
+
+    response = conversation.message(workspace_id=watsonworkspaceId, message_input=message_body,
+                                        context=context, alternate_intents=True)
+
+    textReply=response['output']['text']
+    context = response['context']
+    if response['output']['nodes_visited'][0]!='Anything_Node':
+        print("#"*10)
+        p.dump(context,open("context.p",'wb'))
+        print(json.dumps(context,indent=2))
+    print(textReply)
+    return [textReply,context]
